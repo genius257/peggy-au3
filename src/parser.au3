@@ -1632,5 +1632,74 @@ Func peg_parseRule()
 EndFunc
 
 Func peg_parseChoiceExpression()
-    ;
+    Local $s0, $s1, $s2, $s3, $s4, $s5, $s6, $s7
+
+    $s0 = $peg_currPos
+    $s1 = peg_parseActionExpression()
+    If Not ($s1 = $peg_FAILED) Then
+        Local $s2 = []
+        $s3 = $peg_currPos
+        $s4 = peg_parse__()
+        If AscW(StringMid($input, $peg_currPos, 1)) == 47 Then
+            $s5 = $peg_c9
+            $peg_currPos += 1
+        Else
+            $s5 = $peg_FAILED
+            If $peg_silentFails = 0 Then peg_fail($peg_e10)
+        EndIf
+
+        If Not ($s5 = $peg_FAILED) Then
+            $s6 = peg_parse__()
+            $s7 = peg_parseActionExpression()
+            If Not ($s7 = $peg_FAILED) Then
+                $s3 = $s7
+            Else
+                $peg_currPos = $s3
+                $s3 = $peg_FAILED
+            EndIf
+        Else
+            $peg_currPos = $s3
+            $s3 = $peg_FAILED
+        EndIf
+
+        While Not ($s3 = $peg_FAILED)
+            Redim $s2[UBound($s2) + 1]
+            $s2[UBound($s2) - 1] = $s3
+            $s3 = $peg_currPos
+            $s4 = peg_parse__()
+            If AscW(StringMid($input, $peg_currPos, 1)) == 47 Then
+                $s5 = $peg_c9
+                $peg_currPos += 1
+            Else
+                $s5 = $peg_FAILED
+                If $peg_silentFails = 0 Then peg_fail($peg_e10)
+            EndIf
+
+            If Not ($s5 = $peg_FAILED) Then
+                $s6 = peg_parse__()
+                $s7 = peg_parseActionExpression()
+                If Not ($s7 = $peg_FAILED) Then
+                    $s3 = $s7
+                Else
+                    $peg_currPos = $s3
+                    $s3 = $peg_FAILED
+                EndIf
+            Else
+                $peg_currPos = $s3
+                $s3 = $peg_FAILED
+            EndIf
+        Wend
+
+        $peg_savedPos = $s0
+        $s0 = peg_f19($s1, $s2)
+    Else
+        $peg_currPos = $s0
+        $s0 = $peg_FAILED
+    EndIf
+
+    Return $s0
+EndFunc
+
+Func peg_parseActionExpression()
+
 EndFunc
