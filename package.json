@@ -1,0 +1,18 @@
+{
+  "name": "peggy-au3",
+  "version": "1.0.0",
+  "description": "PeggyJS port in AutoIt3",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "peggy": "^4.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.3"
+  }
+}
