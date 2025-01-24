@@ -188,9 +188,11 @@ class Peggyau3 implements IPeggyau3 {
                 // rules divided by "/"
                 return [
                     `${this.functionName("Parser_Choice")}`,
-                    `${this.functionName("Array")}(`,
-                        ast.alternatives.map(alternative => `${this.functionName("Array")}(${this.ast2code(alternative)})`).join(","),
-                    `)`,
+                    [
+                        `${this.functionName("Array")}(`,
+                            ast.alternatives.map(alternative => `${this.functionName("Array")}(${this.ast2code(alternative)})`).join(","),
+                        `)`,
+                    ].join('')
                 ].join(",");
             case "literal":
                 return `${this.functionName("Parser_Literal")}, "${ast.value.replace(/"/g, '""')}", ${ast.ignoreCase ? "1" : "0"}`;
