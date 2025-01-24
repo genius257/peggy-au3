@@ -147,8 +147,10 @@ class Peggyau3 implements IPeggyau3 {
 
         ast.rules.forEach(rule => {
             parts.push([
-                `Func ${this.functionName("peg_f" + rule.name)}()`,
-                    `Return ${this.functionName("Parser_Run")}($t, ${this.ast2code(rule.expression)})`,
+                `Func ${this.functionName("peg_f" + rule.name)}($t)`,
+                    `Local $p = ${this.functionName("InputStream_GetPosition")}($t)`,
+                    `Local $r = ${this.functionName("Parser_Run")}($t, ${this.functionName("Array")}(${this.ast2code(rule.expression)}))`,
+                    `Return SetError(@error, $p, $r)`,
                 `EndFunc`,
             ].join("\n"));
         });
