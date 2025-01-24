@@ -39,6 +39,11 @@ class Peggyau3 implements IPeggyau3 {
         return `__${this.uniqueId}_${name}`;
     }
 
+    toAu3String(value: string): string {
+        if (value === "\n") {return "@LF";}
+        return `"${value.replace(/"/g, '""')}"`;
+    }
+
     generate(ast: ast.Grammar, options: ParserBuildOptions, session: Session): void {
         const uniqueId = Date.now().toString(16);
         this.parts = [];
@@ -236,7 +241,7 @@ class Peggyau3 implements IPeggyau3 {
                     ].join('')
                 ].join(",");
             case "literal":
-                return `${this.functionName("Parser_Literal")}, "${ast.value.replace(/"/g, '""')}", ${ast.ignoreCase ? "1" : "0"}`;
+                return `${this.functionName("Parser_Literal")}, ${this.toAu3String(ast.value)}, ${ast.ignoreCase ? "1" : "0"}`;
             default:
                 throw new Error("unhandled type: " + ast.type);
         }
