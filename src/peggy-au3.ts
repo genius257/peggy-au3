@@ -28,6 +28,7 @@ class Peggyau3 implements IPeggyau3 {
     protected options: ParserBuildOptions;
     protected uniqueId = Date.now().toString(32);
     protected counter: number = 0;
+    protected parts: string[] = [];
 
     constructor(config: Config, options: ParserBuildOptions) {
         this.config = config;
@@ -40,13 +41,13 @@ class Peggyau3 implements IPeggyau3 {
 
     generate(ast: ast.Grammar, options: ParserBuildOptions, session: Session): void {
         const uniqueId = Date.now().toString(16);
-        const parts: string[] = [];
+        this.parts = [];
         if (options.trace) {
-            parts.push(`ConsoleWrite("Parser loaded")`);
+            this.parts.push(`ConsoleWrite("Parser loaded")`);
         }
 
         // InputStream functions
-        parts.push([
+        this.parts.push([
             `Func ${this.functionName("InputStream")}($sInput)`,
                 `Local $t = DllStructCreate("WCHAR input["&StringLen($sInput)&"];LONG length;LONG pos;BOOL eof;")`,
                 `DllStructSetData($t, "input", $sInput)`,
@@ -115,7 +116,7 @@ class Peggyau3 implements IPeggyau3 {
         ].join("\n"));
 
         // Array functions
-        parts.push([
+        this.parts.push([
             `Func ${this.functionName("Array")}($v1=Null,$v2=Null,$v3=Null,$v4=Null,$v5=Null,$v6=Null,$v7=Null,$v8=Null,$v9=Null,$v10=Null,$v11=Null,$v12=Null,$v13=Null,$v14=Null,$v15=Null,$v16=Null,$v17=Null,$v18=Null,$v19=Null,$v20=Null,$v21=Null,$v22=Null,$v23=Null,$v24=Null,$v25=Null,$v26=Null,$v27=Null,$v28=Null,$v29=Null,$v30=Null,$v31=Null,$v32=Null,$v33=Null,$v34=Null,$v35=Null,$v36=Null,$v37=Null,$v38=Null,$v39=Null,$v40=Null,$v41=Null,$v42=Null,$v43=Null,$v44=Null,$v45=Null,$v46=Null,$v47=Null,$v48=Null,$v49=Null,$v50=Null,$v51=Null,$v52=Null,$v53=Null,$v54=Null,$v55=Null,$v56=Null,$v57=Null,$v58=Null,$v59=Null,$v60=Null,$v61=Null,$v62=Null,$v63=Null,$v64=Null,$v65=Null,$v66=Null,$v67=Null,$v68=Null,$v69=Null,$v70=Null,$v71=Null,$v72=Null,$v73=Null,$v74=Null,$v75=Null,$v76=Null,$v77=Null,$v78=Null,$v79=Null,$v80=Null,$v81=Null,$v82=Null,$v83=Null,$v84=Null,$v85=Null,$v86=Null,$v87=Null,$v88=Null,$v89=Null,$v90=Null,$v91=Null,$v92=Null,$v93=Null,$v94=Null,$v95=Null,$v96=Null,$v97=Null,$v98=Null,$v99=Null,$v100=Null)`,
                 `Local $a[@NumParams]`,
                 `For $i = 1 To @NumParams`,
@@ -126,7 +127,7 @@ class Peggyau3 implements IPeggyau3 {
         ].join("\n"));
 
         // Parser functions
-        parts.push([
+        this.parts.push([
             `Func ${this.functionName("Parser_Run")}($t, $a)`,
                 `Local $s = "Call($a[0], $t"`,
                 `For $i = 1 To Ubound($a) - 1`,
@@ -184,7 +185,7 @@ class Peggyau3 implements IPeggyau3 {
 
         // Rule functions
         ast.rules.forEach(rule => {
-            parts.push([
+            this.parts.push([
                 `Func ${this.functionName("peg_f" + rule.name)}($t)`,
                     `Local $p = ${this.functionName("InputStream_GetPosition")}($t)`,
                     `Local $r = ${this.functionName("Parser_Run")}($t, ${this.functionName("Array")}(${this.ast2code(rule.expression)}))`,
@@ -193,7 +194,7 @@ class Peggyau3 implements IPeggyau3 {
             ].join("\n"));
         });
 
-        parts.push([
+        this.parts.push([
             `Func peg_parse($input, $options = Null)`,
             //`$options = @NumParams > 1 ? $options : MapCreate()`,
                 `Local $t = ${this.functionName("InputStream")}($input)`,
@@ -203,14 +204,14 @@ class Peggyau3 implements IPeggyau3 {
         ].join("\n"));
 
         if (Array.isArray(ast.initializer)) {
-            parts.push(ast.initializer.map(node => node.code).join("\n"));
+            this.parts.push(ast.initializer.map(node => node.code).join("\n"));
         } else {
             if (typeof ast.initializer?.code === "string") {
-                parts.push(ast.initializer.code);
+                this.parts.push(ast.initializer.code);
             }
         }
 
-        ast.code = new SourceNode(null, null, null, parts.join("\n"));
+        ast.code = new SourceNode(null, null, null, this.parts.join("\n"));
     }
 
     getUniqueInternalName(): string {
