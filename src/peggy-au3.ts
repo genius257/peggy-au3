@@ -65,7 +65,7 @@ class Peggyau3 implements IPeggyau3 {
                 `If $i = 0 Then Return Null`,
                 // ; Position minus 1, because we are going from 1 based to 0 based index
                 // ; Position times 2, because we are dealing with a WCHAR array
-                `Return DllStructGetData(DllStructCreate("WCHAR["&$iCount&"]", DllStructGetPtr($t, "input") + ($t.pos - 1) * 2, $i), 1)`,
+                `Return DllStructGetData(DllStructCreate("WCHAR["&$i&"]", DllStructGetPtr($t, "input") + ($t.pos - 1) * 2), 1)`,
             `EndFunc`,
 
             `Func ${this.functionName("InputStream_Skip")}($t, $i = 1)`,
