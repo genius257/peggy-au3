@@ -199,6 +199,14 @@ class Peggyau3 implements IPeggyau3 {
             ].join("\n"));
         });
 
+        if (Array.isArray(ast.initializer)) {
+            this.parts.push(ast.initializer.map(node => node.code).join("\n"));
+        } else {
+            if (typeof ast.initializer?.code === "string") {
+                this.parts.push(ast.initializer.code);
+            }
+        }
+
         this.parts.push([
             `Func peg_parse($input, $options = Null)`,
             //`$options = @NumParams > 1 ? $options : MapCreate()`,
@@ -207,14 +215,6 @@ class Peggyau3 implements IPeggyau3 {
                 `Return SetError(@error, 0, $r)`,
             `EndFunc`,
         ].join("\n"));
-
-        if (Array.isArray(ast.initializer)) {
-            this.parts.push(ast.initializer.map(node => node.code).join("\n"));
-        } else {
-            if (typeof ast.initializer?.code === "string") {
-                this.parts.push(ast.initializer.code);
-            }
-        }
 
         ast.code = new SourceNode(null, null, null, this.parts.join("\n"));
     }
