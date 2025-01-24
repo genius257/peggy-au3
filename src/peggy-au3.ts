@@ -127,6 +127,15 @@ class Peggyau3 implements IPeggyau3 {
 
         // Parser functions
         parts.push([
+            `Func ${this.functionName("Parser_Run")}($t, $a)`,
+                `Local $s = "Call($a[0], $t"`,
+                `For $i = 1 To Ubound($a) - 1`,
+                    `$s &= ", $a[" & $i & "]"`,
+                `Next`,
+                `$s &= ")"`,
+                `Local $r = Execute($s)`,
+                `Return SetError(@error, @extended, $r)`,
+            `EndFunc`,
             `Func ${this.functionName("Parser_OneOrMore")}($t, $v)`,
                 `Local $a[16], $i = 0, $p = ${this.functionName("InputStream_GetPosition")}($t), $e = 0, $s`,
                 `While 1`,
