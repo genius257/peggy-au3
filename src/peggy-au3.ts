@@ -182,6 +182,7 @@ class Peggyau3 implements IPeggyau3 {
             `EndFunc`,
         ].join("\n"));
 
+        // Rule functions
         ast.rules.forEach(rule => {
             parts.push([
                 `Func ${this.functionName("peg_f" + rule.name)}($t)`,
