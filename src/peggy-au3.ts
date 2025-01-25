@@ -281,6 +281,9 @@ class Peggyau3 implements IPeggyau3 {
                 return `${this.functionName("Parser_ZeroOrMore")}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
             case "group":
                 return `${this.functionName("Parser_Group")}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
+            case "named":
+                // represent a named expression. Currently only seen it used for named rules
+                return `${this.functionName("Parser_Named")}, "${ast.name}", ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
             default:
                 throw new Error("unhandled type: " + ast.type);
         }
