@@ -279,6 +279,8 @@ class Peggyau3 implements IPeggyau3 {
                 return `${this.functionName("Parser_RuleRef")}, ${this.functionName("peg_f" + ast.name)}`;
             case "zero_or_more":
                 return `${this.functionName("Parser_ZeroOrMore")}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
+            case "group":
+                return `${this.functionName("Parser_Group")}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
             default:
                 throw new Error("unhandled type: " + ast.type);
         }
