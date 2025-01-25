@@ -273,6 +273,8 @@ class Peggyau3 implements IPeggyau3 {
                 return `${this.functionName("Parser_Action")}, ${actionFunctionName}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
             case "sequence":
                 return `${this.functionName("Parser_Sequence")}, ${this.functionName("Array")}(${ast.elements.map(element => `${this.functionName("Array")}(${this.ast2code(element)})`).join(", ")})`;
+            case "labeled":
+                return `${this.functionName("Parser_Labeled")}, "${ast.label}", ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
             default:
                 throw new Error("unhandled type: " + ast.type);
         }
