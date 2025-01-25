@@ -244,6 +244,33 @@ class Peggyau3 implements IPeggyau3 {
                 ].join(",");
             case "literal":
                 return `${this.functionName("Parser_Literal")}, ${this.toAu3String(ast.value)}, ${ast.ignoreCase ? "1" : "0"}`;
+            case "action":
+                // FIXME: add support for ast.code Javascript transpilation to AutoIt3
+                // parse ast.code with javascript parser
+                // transpile javascript ast to AutoIt3 code
+
+                const actionFunctionName = this.getUniqueInternalName();
+
+                const parameters = (() => {
+                    switch (ast.expression.type) {
+                        case "sequence":
+                            return ast.expression.elements.filter(expression => expression.type === "labeled").map(expression =>  "$" + expression.label);
+                        case "labeled":
+                            return ["$" + ast.expression.label];
+                        default:
+                            ast.expression.type satisfies never;
+                            throw new Error("action parameters failed: unhandled type: " + ast.expression.type);
+                    }
+                })();
+
+                this.parts.push([
+                    `Func ${actionFunctionName}(${parameters.join(", ")})`,
+                        `${ast.code}`,
+                    `EndFunc`,
+                ].join("\n"));
+
+                
+                return `${this.functionName("Parser_Action")}, ${actionFunctionName}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
             default:
                 throw new Error("unhandled type: " + ast.type);
         }
