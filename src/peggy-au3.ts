@@ -251,11 +251,13 @@ class Peggyau3 implements IPeggyau3 {
 
                 const actionFunctionName = this.getUniqueInternalName();
 
+                const indices: number[] = [];
                 const parameters = (() => {
                     switch (ast.expression.type) {
                         case "sequence":
-                            return ast.expression.elements.filter(expression => expression.type === "labeled").map(expression =>  "$" + expression.label);
+                            return ast.expression.elements.filter((expression, index) => {const isLabeled = expression.type === "labeled"; if(isLabeled) {indices.push(index);} return isLabeled}).map(expression =>  "$" + expression.label);
                         case "labeled":
+                            indices.push(0);
                             return ["$" + ast.expression.label];
                         default:
                             ast.expression.type satisfies never;
@@ -270,7 +272,7 @@ class Peggyau3 implements IPeggyau3 {
                 ].join("\n"));
 
                 
-                return `${this.functionName("Parser_Action")}, ${actionFunctionName}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
+                return `${this.functionName("Parser_Action")}, ${actionFunctionName}, ${this.functionName("Array")}(${this.ast2code(ast.expression)}), ${this.functionName("Array")}(${indices.join(", ")})`;
             case "sequence":
                 return `${this.functionName("Parser_Sequence")}, ${this.functionName("Array")}(${ast.elements.map(element => `${this.functionName("Array")}(${this.ast2code(element)})`).join(", ")})`;
             case "labeled":
