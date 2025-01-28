@@ -290,6 +290,8 @@ class Peggyau3 implements IPeggyau3 {
                 return `${this.functionName("Parser_Text")}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
             case "simple_not":
                 return `${this.functionName("Parser_SimpleNot")}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
+            case "any":
+                return `${this.functionName("Parser_Any")}`;
             default:
                 throw new Error("unhandled type: " + ast.type);
         }
