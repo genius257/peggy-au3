@@ -41,7 +41,7 @@ class Peggyau3 implements IPeggyau3 {
 
     toAu3String(value: string): string {
         if (value === "\n") {return "@LF";}
-        return `"${value.replace(/"/g, '""')}"`;
+        return `"${value.replace(/"/g, '""').replace(/\r/g, '"&@CR&"').replace(/\n/g, '"&@LF&"')}"`;
     }
 
     generate(ast: ast.Grammar, options: ParserBuildOptions, session: Session): void {
