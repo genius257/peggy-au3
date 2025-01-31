@@ -259,6 +259,22 @@ class Peggyau3 implements IPeggyau3 {
                         case "labeled":
                             indices.push(0);
                             return ["$" + ast.expression.label];
+                        case "any":
+                        case "class":
+                        case "literal":
+                        case "rule_ref":
+                        case "group":
+                        case "library_ref":
+                        case "one_or_more":
+                        case "optional":
+                        case "repeated":
+                        case "semantic_and":
+                        case "semantic_not":
+                        case "simple_and":
+                        case "simple_not":
+                        case "text":
+                        case "zero_or_more":
+                            return [];
                         default:
                             ast.expression.type satisfies never;
                             throw new Error("action parameters failed: unhandled type: " + ast.expression.type);
