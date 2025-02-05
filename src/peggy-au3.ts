@@ -195,7 +195,8 @@ class Peggyau3 implements IPeggyau3 {
                     `Local $p = ${this.functionName("InputStream_GetPosition")}($t)`,
                     `Local Static $aR = ${this.functionName("Array")}(${this.ast2code(rule.expression)})`,
                     `Local $r = ${this.functionName("Parser_Run")}($t, $aR)`,
-                    `Return SetError(@error, $p, $r)`,
+                    `Local $e = @error`,
+                    `Return SetError($e, $p, $r)`,
                 `EndFunc`,
             ].join("\n"));
         });
