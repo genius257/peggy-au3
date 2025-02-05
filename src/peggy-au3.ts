@@ -231,7 +231,7 @@ class Peggyau3 implements IPeggyau3 {
                 // a list or ot parts that can each be either symbol range or single symbol
                 const parts = ast.parts.map(part => Array.isArray(part) ? `${this.functionName("Array")}(${part.map(part => part.charCodeAt(0)).join(",")})` : part.charCodeAt(0)).join(",");
 
-                return `${this.functionName("Parser_Class")}, ${this.functionName("Array")}(${parts})`;
+                return `${this.functionName("Parser_Class")}, ${this.functionName("Array")}(${parts}), ${ast.ignoreCase ? "1" : "0"}, ${ast.inverted ? "1" : "0"}`;
             case "choice":
                 // rules divided by "/"
                 return [
