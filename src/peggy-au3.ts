@@ -193,7 +193,8 @@ class Peggyau3 implements IPeggyau3 {
             this.parts.push([
                 `Func ${this.functionName("peg_f" + rule.name)}($t)`,
                     `Local $p = ${this.functionName("InputStream_GetPosition")}($t)`,
-                    `Local $r = ${this.functionName("Parser_Run")}($t, ${this.functionName("Array")}(${this.ast2code(rule.expression)}))`,
+                    `Local Static $aR = ${this.functionName("Array")}(${this.ast2code(rule.expression)})`,
+                    `Local $r = ${this.functionName("Parser_Run")}($t, $aR)`,
                     `Return SetError(@error, $p, $r)`,
                 `EndFunc`,
             ].join("\n"));
