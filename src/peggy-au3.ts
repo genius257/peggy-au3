@@ -300,7 +300,10 @@ class Peggyau3 implements IPeggyau3 {
             case "zero_or_more":
                 return `${this.functionName("Parser_ZeroOrMore")}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
             case "group":
-                return `${this.functionName("Parser_Group")}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
+                {
+                    const indices = ast.expression.type === "sequence" ? ast.expression.elements.map((element, index) => element.type === "labeled" && element.label === null ? index : null) : null;
+                    return `${this.functionName("Parser_Group")}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})${indices === null ? "" : `, ${this.functionName("Array") + `(${indices.filter(index => index !== null).join(", ")})`}`}`;
+                }
             case "named":
                 // represent a named expression. Currently only seen it used for named rules
                 return `${this.functionName("Parser_Named")}, "${ast.name}", ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
