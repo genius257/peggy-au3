@@ -278,7 +278,7 @@ class Peggyau3 implements IPeggyau3 {
                         case "zero_or_more":
                             return [];
                         default:
-                            ast.expression.type satisfies never;
+                            ast.expression satisfies never;
                             throw new Error("action parameters failed: unhandled type: " + ast.expression.type);
                     }
                 })();
