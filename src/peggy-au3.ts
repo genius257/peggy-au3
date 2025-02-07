@@ -183,7 +183,7 @@ class Peggyau3 implements IPeggyau3 {
             `Func ${this.functionName("Parser_Literal")}($t, $v, $b = True)`,
                 `$s = ${this.functionName("InputStream_PeekAhead")}($t, StringLen($v))`,
                 `${this.functionName("InputStream_Skip")}($t, StringLen($v))`,
-                `If ($b ? $s == $v : $s = $v) Then Return $s`,
+                `If ($b ? $s = $v : $s == $v) Then Return $s`,
                 `Return SetError(1, 0, Null)`,
             `EndFunc`,
         ].join("\n"));
