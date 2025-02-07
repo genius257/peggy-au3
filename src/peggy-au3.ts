@@ -305,6 +305,7 @@ class Peggyau3 implements IPeggyau3 {
                             return [];
                         default:
                             ast.expression satisfies never;
+                            // @ts-ignore
                             throw new Error("action parameters failed: unhandled type: " + ast.expression.type);
                     }
                 })();
