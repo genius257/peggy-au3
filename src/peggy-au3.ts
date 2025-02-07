@@ -266,7 +266,7 @@ class Peggyau3 implements IPeggyau3 {
                     `${this.functionName("Parser_Choice")}`,
                     [
                         `${this.functionName("Array")}(`,
-                            ast.alternatives.map(alternative => `${this.functionName("Array")}(${this.ast2code(alternative)})`).join(","),
+                            ast.alternatives.map(alternative => `${this.functionName("Array")}(${this.ast2code(alternative)})`).join(", _\n"),
                         `)`,
                     ].join('')
                 ].join(",");
@@ -322,7 +322,7 @@ class Peggyau3 implements IPeggyau3 {
             case "labeled":
                 return `${this.functionName("Parser_Labeled")}, ${ast.label === null ? "Null" : `"${ast.label}"`}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
             case "rule_ref":
-                return `${this.functionName("Parser_RuleRef")}, ${this.functionName("peg_f" + ast.name)}`;
+                return `${this.functionName("Parser_RuleRef")}, _\n${this.functionName("peg_f" + ast.name)}`;
             case "zero_or_more":
                 return `${this.functionName("Parser_ZeroOrMore")}, ${this.functionName("Array")}(${this.ast2code(ast.expression)})`;
             case "group":
