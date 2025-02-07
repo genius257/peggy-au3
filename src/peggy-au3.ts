@@ -188,14 +188,40 @@ class Peggyau3 implements IPeggyau3 {
             `EndFunc`,
         ].join("\n"));
 
+        const ruleResultCacheBlocks = [
+            [
+                `Local Static $cacheId = Null`,
+                `Local $key = String(${this.functionName("InputStream_GetPosition")}($t))`,
+                `Local Static $cached[]`,
+                `If $cacheId = Null Or Not ($cacheId = DllStructGetPtr($t)) Then`,
+                    `$cacheId = DllStructGetPtr($t)`,
+                    `Local $_cached[]`,
+                    `$cached = $_cached`,
+                `EndIf`,
+                `If MapExists($cached, $key) Then`,
+                    `${this.functionName("InputStream_SetPosition")}($t, ($cached[$key])[3])`,
+                    `Return SetError(($cached[$key])[2], ($cached[$key])[1], ($cached[$key])[0])`,
+                `EndIf`,
+            ].join("\n"),
+            [
+                `Local $a = [$r, $p, $e, ${this.functionName("InputStream_GetPosition")}($t)]`,
+                `$cached[$key] = $a`,
+            ].join("\n"),
+        ] as const;
+
         // Rule functions
         ast.rules.forEach(rule => {
             this.parts.push([
                 `Func ${this.functionName("peg_f" + rule.name)}($t)`,
+                    this.options.cache ? ruleResultCacheBlocks[0] : '',
+
                     `Local $p = ${this.functionName("InputStream_GetPosition")}($t)`,
                     `Local Static $aR = ${this.functionName("Array")}(${this.ast2code(rule.expression)})`,
                     `Local $r = ${this.functionName("Parser_Run")}($t, $aR)`,
                     `Local $e = @error`,
+
+                    this.options.cache ? ruleResultCacheBlocks[1] : '',
+
                     `Return SetError($e, $p, $r)`,
                 `EndFunc`,
             ].join("\n"));
