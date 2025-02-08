@@ -331,6 +331,10 @@ class Peggyau3 implements IPeggyau3 {
                 `EndIf`,
                 `Return SetError(0, $p, $r)`,
             `EndFunc`,
+            `Func ${this.functionName("Parser_Any")}($t)`,
+                `Local $r = ${this.functionName("InputStream_Consume")}($t)`,
+                `Return SetError($r = Null ? 1 : 0, 0, $r)`,
+            `EndFunc`,
         ].join("\n"));
 
         const ruleResultCacheBlocks = [
