@@ -186,6 +186,25 @@ class Peggyau3 implements IPeggyau3 {
                 `If ($b ? $s = $v : $s == $v) Then Return $s`,
                 `Return SetError(1, 0, Null)`,
             `EndFunc`,
+            `Func ${this.functionName("Parser_Action")}($t, $f, $a, $i)`,
+                `Local $p = ${this.functionName("InputStream_GetPosition")}($t), $e = 0`,
+                `$a = ${this.functionName("Parser_Run")}($t, $a)`,
+                `If @error Then`,
+                    `$e = @error`,
+                    `${this.functionName("InputStream_SetPosition")}($t, $p)`,
+                    `Return SetError($e, $p, Null)`,
+                `EndIf`,
+
+                `Local $s = "Call($f"`,
+                `For $j = 0 To Ubound($i) - 1`,
+                    `$s &= ", $a[" & $i[$j] & "]"`,
+                `Next`,
+                `If $i = Null Then $s &= ", $a"`,
+                `$s &= ")"`,
+                `Local $r = Execute($s)`,
+                `$e = @error`,
+                `Return SetError($e, $p, $r)`,
+            `EndFunc`,
         ].join("\n"));
 
         const ruleResultCacheBlocks = [
