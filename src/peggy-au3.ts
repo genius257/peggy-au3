@@ -300,6 +300,11 @@ class Peggyau3 implements IPeggyau3 {
                 `EndIf`,
                 `Return SetError(1, 0, Null)`,
             `EndFunc`,
+            `Func ${this.functionName("Parser_Named")}($t, $n, $a)`,
+                // FIXME: support name string parameter (relevant for error messages)
+                `Local $r = ${this.functionName("Parser_Run")}($t, $a)`,
+                `Return SetError(@error, @extended, $r)`,
+            `EndFunc`,
         ].join("\n"));
 
         const ruleResultCacheBlocks = [
