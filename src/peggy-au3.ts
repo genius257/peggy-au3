@@ -252,6 +252,22 @@ class Peggyau3 implements IPeggyau3 {
                 `Redim $a[$i]`,
                 `Return $a`,
             `EndFunc`,
+            `Func ${this.functionName("Parser_Group")}($t, $a, $i = Null)`,
+                `Local $r = ${this.functionName("Parser_Run")}($t, $a)`,
+                `Local $e = @error`,
+                `Local $p = @extended`,
+                `If @error = 0 Then`,
+                    `If Not ($i = Null) Then`,
+                        `If Ubound($i) = 1 Then Return SetError($e, $p, $r[$i[0]])`,
+                        `Local $a2[Ubound($i)]`,
+                        `For $j = 0 To Ubound($i) - 1`,
+                            `$a2[$j] = $r[$i[$j]]`,
+                        `Next`,
+                        `Return SetError($e, $p, $a2)`,
+                    `EndIf`,
+                `EndIf`,
+                `Return SetError($e, $p, $r)`,
+            `EndFunc`,
         ].join("\n"));
 
         const ruleResultCacheBlocks = [
