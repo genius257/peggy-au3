@@ -218,6 +218,16 @@ class Peggyau3 implements IPeggyau3 {
 
                 `Return $a`,
             `EndFunc`,
+            `Func ${this.functionName("Parser_Labeled")}($t, $l, $a)`,
+                // FIXME: currenly this does nothing with the label.
+                `Local $r = ${this.functionName("Parser_Run")}($t, $a)`,
+                `Return SetError(@error, @extended, $r)`,
+            `EndFunc`,
+            `Func ${this.functionName("Parser_RuleRef")}($t, $r)`,
+                // TODO: verify behavior
+                `Local $v = $r($t)`,
+                `Return SetError(@error, @extended, $v)`,
+            `EndFunc`,
         ].join("\n"));
 
         const ruleResultCacheBlocks = [
