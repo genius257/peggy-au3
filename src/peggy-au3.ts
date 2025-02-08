@@ -320,6 +320,17 @@ class Peggyau3 implements IPeggyau3 {
                 `EndIf`,
                 `Return $s`,
             `EndFunc`,
+            `Func ${this.functionName("Parser_SimpleNot")}($t, $a)`,
+                `Local $p = ${this.functionName("InputStream_GetPosition")}($t)`,
+                `Local $r = ${this.functionName("Parser_Run")}($t, $a)`,
+                `Local $e = @error`,
+                // Simple not does not consume input
+                `${this.functionName("InputStream_SetPosition")}($t, $p)`,
+                `If $e = 0 Then`,
+                    `Return SetError(1, $p, Null)`,
+                `EndIf`,
+                `Return SetError(0, $p, $r)`,
+            `EndFunc`,
         ].join("\n"));
 
         const ruleResultCacheBlocks = [
