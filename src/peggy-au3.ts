@@ -398,7 +398,9 @@ class Peggyau3 implements IPeggyau3 {
             //`$options = @NumParams > 1 ? $options : MapCreate()`,
                 `Local $t = ${this.functionName("InputStream")}($input)`,
                 `Local $r = ${this.functionName("peg_f" + (options.allowedStartRules?.[0] ?? ast.rules[0].name))}($t)`,
-                `Return SetError(@error, 0, $r)`,
+                `Local $e = @error`,
+                `If $e = 0 And Not ${this.functionName("InputStream_GetEOF")}($t) Then Return SetError(1, 0, $r)`,
+                `Return SetError($e, 0, $r)`,
             `EndFunc`,
         ].join("\n"));
 
